@@ -51,7 +51,7 @@
                                 </nav>
                             </div> -->
                             <div class="sb-sidenav-menu-heading">Modulos</div>
-                            <a class="nav-link" href="charts.html">
+                            <a class="nav-link" href="{{ route('categorias.index') }}">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-tag"></i></div>
                                 Categorias
                             </a>
