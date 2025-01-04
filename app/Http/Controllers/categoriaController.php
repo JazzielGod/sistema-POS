@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoriaRequest;
+use App\Http\Requests\UpdateCategoriaRequest;
 use App\Models\Caracteristica;
-use GrahamCampbell\ResultType\Success;
+use App\Models\Categoria;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,8 @@ class categoriaController extends Controller
      */
     public function index()
     {
-        return view('categoria.index');
+        $categorias = Categoria::with('caracteristica')->get();
+        return view('categoria.index', ['categorias' => $categorias]);
     }
 
     /**
@@ -42,7 +44,7 @@ class categoriaController extends Controller
             DB::rollBack();
         }
 
-        return redirect()->route('categorias.index')->with('success', 'Categoria creada correctamente');
+        return redirect()->route('categorias.index')->with('description_name', 'Categoria creada correctamente');
         
     }
 
@@ -57,17 +59,21 @@ class categoriaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Categoria $categoria)
     {
-        //
+        return view('categoria.edit', compact('categoria'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCategoriaRequest $request, Categoria $categoria)
     {
-        //
+        Caracteristica::where('id', $categoria->caracteristica->id)
+        ->update($request->validated());
+        
+        return redirect()->route('categorias.index')->with('description_name', 'Categoria actualizada correctamente');
+
     }
 
     /**

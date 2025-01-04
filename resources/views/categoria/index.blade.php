@@ -9,7 +9,7 @@
 
 @section('content')
 
-    @if (session('success'))
+    @if (session('description_name'))
         <script>
             const Toast = Swal.mixin({
                 toast: true,
@@ -24,7 +24,7 @@
             });
             Toast.fire({
                 icon: "success",
-                title: "Operación exitosa"
+                title: "{{ session('description_name') }}"
             });
         </script>
     @endif
@@ -49,34 +49,36 @@
                 tabla categorias
             </div>
             <div class="card-body">
-                <table id="datatablesSimple">
+                <table id="datatablesSimple" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
-                            <th>Age</th>
-                            <th>Start date</th>
-                            <th>Salary</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>Edinburgh</td>
-                            <td>61</td>
-                            <td>2011/04/25</td>
-                            <td>$320,800</td>
-                        </tr>
-                        <tr>
-                            <td>Garrett Winters</td>
-                            <td>Accountant</td>
-                            <td>Tokyo</td>
-                            <td>63</td>
-                            <td>2011/07/25</td>
-                            <td>$170,750</td>
-                        </tr>
+                        @foreach ($categorias as $categoria)
+                            <tr>
+                                <td>
+                                    {{ $categoria->caracteristica->nombre }}
+                                </td>
+                                <td>
+                                    {{ $categoria->caracteristica->descripcion }}
+                                </td>
+                                <td>
+                                    <a href="{{ route('categorias.edit', $categoria->id) }}">
+                                        <button type="button" class="btn btn-warning">Editar</button>
+                                    </a>
+                                    <form action="{{ route('categorias.destroy', $categoria->id) }}" method="post"
+                                        style="display: inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
