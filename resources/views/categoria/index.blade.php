@@ -9,8 +9,10 @@
 
 @section('content')
 
-    @if (session('description_name'))
+    @if (session('success'))
         <script>
+
+            let msg = "{{ session('success') }}";
             const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -24,7 +26,7 @@
             });
             Toast.fire({
                 icon: "success",
-                title: "{{ session('description_name') }}"
+                title: msg
             });
         </script>
     @endif
@@ -54,6 +56,7 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Descripción</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -67,17 +70,54 @@
                                     {{ $categoria->caracteristica->descripcion }}
                                 </td>
                                 <td>
+                                    @if ($categoria->caracteristica->estado == 1)
+                                        <span class="badge bg-success">Activo</span>
+                                    @else
+                                        <span class="badge bg-danger">Inactivo</span>
+                                    @endif
+                                </td>
+                                <td>
                                     <a href="{{ route('categorias.edit', $categoria->id) }}">
                                         <button type="button" class="btn btn-warning">Editar</button>
                                     </a>
-                                    <form action="{{ route('categorias.destroy', $categoria->id) }}" method="post"
-                                        style="display: inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                                    </form>
+
+                                    @if ($categoria->caracteristica->estado == 1)
+                                        <button type="submit" class="btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#confirmModal-{{ $categoria->id }}">Eliminar</button>
+                                    @else
+                                        <button type="submit" class="btn btn-success" data-bs-toggle="modal"
+                                            data-bs-target="#confirmModal-{{ $categoria->id }}">Restaurar</button>
+                                    @endif
                                 </td>
                             </tr>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="confirmModal-{{ $categoria->id }}" tabindex="-1"
+                                aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="confirmModalLabel">Mensaje de confirmación</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{$categoria->caracteristica->estado == 1 ? '¿Estás seguro de que deseas eliminar esta categoria?' : '¿Estás seguro de que deseas restaurar esta categoria?'}}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Cerrar</button>
+
+                                            <form action="{{ route('categorias.destroy', $categoria->id) }}" method="post"
+                                                style="display: inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger">Confirmar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endforeach
                     </tbody>
                 </table>
