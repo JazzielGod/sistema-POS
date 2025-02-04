@@ -9,13 +9,17 @@ class Presentacione extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'caracteristica_id',
+    ];
+
     public function productos()
     {
         return $this->belongsToMany(Producto::class);
     }
 
-    public function caracteristica()
+    public function caracteristicas()
     {
-        return $this->belongsTo(Caracteristica::class);
+        return $this->belongsTo(Caracteristica::class, 'caracteristica_id');
     }
 }

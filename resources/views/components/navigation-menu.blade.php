@@ -55,10 +55,11 @@
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-tag"></i></div>
                                 Categorias
                             </a>
-                            <a class="nav-link" href="tables.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Tables
+                            <a class="nav-link" href="{{ route('presentaciones.index') }}">
+                                <div class="sb-nav-link-icon"><i class="fa-solid fa-business-time"></i></div>
+                                Presentaciones
                             </a>
+                            
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
